@@ -1,0 +1,76 @@
+@startuml
+
+boundary FarmingView as view
+control FarmingViewModel as vm
+entity Vegetable as Vegetable
+entity CarrotSowing as Sowing
+entity CarrotState2 as State2
+entity CarrotState3 as State3
+
+
+view -> vm : grow()
+vm -> Vegetable : grow()
+activate Vegetable
+Vegetable -> Sowing : grow()
+activate Sowing
+note right : day begins at 1
+Sowing -> Sowing : increment day
+return setState(new CarrotState2(Vegetable)) [day == 4]
+note right : day = 2
+deactivate Vegetable
+
+
+
+view -> vm : grow()
+vm -> Vegetable : grow()
+activate Vegetable
+Vegetable -> Sowing : grow()
+activate Sowing
+Sowing -> Sowing : increment day
+return setState(new CarrotState2(Vegetable)) [day == 4]
+deactivate Vegetable
+
+
+
+
+view -> vm : fertilize()
+vm -> Vegetable : fertilize()
+activate Vegetable
+Vegetable -> Sowing : fertilize()
+activate Sowing
+return setState(new CarrotState3(Vegetable))
+destroy Sowing
+Vegetable --> view : display CarrotState3 (binding)
+deactivate Vegetable
+
+
+
+
+
+view -> vm : grow()
+vm -> Vegetable : grow()
+activate Vegetable
+Vegetable -> State3 : grow()
+activate State3
+note right : day begins at 1
+State3 -> State3 : increment day
+return setState(new CarrotState4(Vegetable)) [day == 4]
+note right : day = 2
+deactivate Vegetable
+
+
+
+
+
+view -> vm : collect()
+vm -> Vegetable : collect()
+activate Vegetable
+Vegetable -> State3 : collect()
+activate State3
+note right : collect points of this state
+return points collected
+Vegetable --> view : undisplay Vegetable
+destroy Vegetable
+
+
+@enduml

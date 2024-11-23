@@ -1,0 +1,116 @@
+@startuml
+
+skinparam classAttributeIconSize 0
+
+
+interface StateVegetable {
++void fertilize();
++void grow();
++int collect();
++State getState();
++StateVegetable getCopy();
++void setDay(int);
+}
+
+class CarrotSowing {
+-Vegetable vegetable;
+--
++CarrotSowing(Vegetable)
+}
+
+class CarrotState2 {
+-Vegetable vegetable;
+--
++CarrotState2(Vegetable)
+}
+
+
+class CarrotState3 {
+-Vegetable vegetable;
+--
++CarrotState3(Vegetable)
+}
+
+class CarrotState4 {
+-Vegetable vegetable;
+--
++CarrotState4(Vegetable)
+}
+
+class CarrotRotten {
+-Vegetable vegetable;
+--
++CarrotRotten(Vegetable)
+}
+
+class CabbageSowing {
+-Vegetable vegetable;
+--
+CabbageSowing(Vegetable)
+}
+
+
+
+
+class CabbageState2{
+-Vegetable vegetable
+--
+CabbageState2(Vegetable)
+}
+
+
+class CabbageState3{
+-Vegetable vegetable
+--
+CabbageState3(Vegetable)
+}
+
+
+class CabbageState4{
+-Vegetable vegetable
+--
+CabbageState4(Vegetable)
+}
+
+
+class CabbageRotten{
+-Vegetable vegetable
+--
+CabbageRotten(Vegetable)
+}
+
+class DirtState {
+-Vegetable vegetable
+--
+DirtState(Vegetable)
+}
+
+class GrassState {
+-Vegetable vegetable
+--
+GrassState(Vegetable)
+}
+
+
+StateVegetable <.... CarrotSowing
+StateVegetable <... CarrotState2
+StateVegetable <..... CarrotState3
+StateVegetable <.... CarrotState4
+StateVegetable <... CarrotRotten
+
+StateVegetable <..... CabbageState3
+StateVegetable <... CabbageState4
+StateVegetable <.... CabbageRotten
+StateVegetable <... CabbageSowing
+StateVegetable <.... CabbageState2
+
+StateVegetable <.left. GrassState
+StateVegetable <.right. DirtState
+
+Vegetable *--- StateVegetable
+
+
+
+
+
+@enduml

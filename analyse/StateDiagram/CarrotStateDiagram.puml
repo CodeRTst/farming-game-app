@@ -1,0 +1,22 @@
+@startuml
+[*] --> CarrotSowing
+
+
+CarrotSowing --> CarrotState2 : [day == 4]
+CarrotSowing -> CarrotState3 : fertilize
+CarrotState2 -> CarrotState3 : [day == 4]
+CarrotState2 -> CarrotState3 : fertilize
+CarrotState3 -> CarrotState4 : [day == 4]
+CarrotState4 -> CarrotRotten : [day == 4]
+
+
+CarrotRotten ---> [*] : [day == 11]
+CarrotRotten ---> [*] : collect
+CarrotSowing ---> [*] : collect
+CarrotState2 ---> [*] : collect
+CarrotState3 ---> [*] : collect
+CarrotState4 ---> [*] : collect
+
+
+
+@enduml

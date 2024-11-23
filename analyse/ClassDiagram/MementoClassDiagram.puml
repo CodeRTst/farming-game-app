@@ -1,0 +1,100 @@
+@startuml
+skinparam classAttributeIconSize 0
+
+package Memento <<Rectangle>> {
+
+
+class GameMemento {
+-plotMementos : PlotMemento[][]
+-farmerMemento : FarmerMemento
+-gameStatus : GameStatus
+-day : int
+-score : int
+--
++GameMemento(PlotMemento[][], FarmerMemento, GameStatus, int , int)
++getDay() : int
++getScore() : int
++getFarmerMemento() : FarmerMemento
++getPlotMementos() : PlotMemento[][]
++getGameStatus() : GameStatus
+}
+
+
+class PlotMemento {
+-elements : ObservableList<Vegetable>
+-dayWithGrass : boolean
+--
++PlotMemento(ObservableList<Vegetable>, boolean)
++getDayWithGrass() : boolean
++getList() : ObservableList<Vegetable>
+}
+
+
+
+class FarmerMemento {
+-line : int
+-col : int
+--
++FarmerMemento(int line, int col)
++getLine() : int
++getCol() : int
+}
+}
+
+
+
+class Game {
+-gameStatus : GameStatus
+-day : int
+-score : int
+--
+save() : GameMemento
+restore(GameMemento) : void
+}
+note bottom of Game
+save() => new GameMemento(Field.save(), farmer.save(), gameStatus, day, score)
+
+Field.save() => PlotMemento[][]
+end note
+
+class Farmer {
+line : int
+col : int
+--
++save() : MementoFarmer
++restore(MementoFarmer) : void
+}
+
+note bottom of Farmer : save() => new FarmerMemento()
+
+class Plot {
+-plotElements : ObservableList<Vegetable>
+-hasGrass : boolean
+--
++save() : PlotMemento
++restore(PlotMemento) : void
+}
+
+note bottom of Plot : save() => new PlotMemento()
+
+
+
+class CareTaker {
+-gameMemento : GameMemento
+--
++saveMemento(GameMemento) : void
++getGameMemento() : GameMemento
+}
+
+CareTaker *-right- GameMemento
+GameMemento "1* " -- "0 " PlotMemento
+GameMemento *--- FarmerMemento
+Farmer .left.> FarmerMemento
+
+
+Plot .left.> PlotMemento
+Game .left.> GameMemento
+
+
+
+@enduml

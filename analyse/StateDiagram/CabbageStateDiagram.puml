@@ -1,0 +1,30 @@
+@startuml
+
+[*] -> CabbageSowing
+
+CabbageSowing --> CabbageState2 : [day == 6]
+CabbageSowing --> CabbageState2 : [day == 5 && nbDayWithGrass > 4]
+CabbageSowing -right-> [*] : collect
+
+CabbageState2 --> CabbageState3 : [day == 5]
+CabbageState2 --> CabbageState3 : [day == 4 && nbDayWithGrass > 3]
+
+CabbageState3 --> CabbageState4 : [day == 4]
+CabbageState3 --> CabbageState4 : [day == 3 && nbDayWithGrass > 2]
+
+CabbageState4 --> CabbageRotten : [day == 3]
+CabbageState4 --> CabbageRotten : [day == 2 && nbDayWithGrass > 1]
+
+
+CabbageState2 --> [*] : collect
+CabbageState3 --> [*] : collect
+CabbageState4 --> [*] : collect
+
+CabbageRotten -down--> [*] : collect
+
+CabbageRotten --down--> [*] : [day == 11]
+CabbageRotten --down-> [*] : [day == 6 && nbDayWithGrass > 5]
+
+
+
+@enduml

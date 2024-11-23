@@ -1,0 +1,220 @@
+@startuml
+
+skinparam classAttributeIconSize 0
+
+
+package app {
+class App {}
+}
+
+package view {
+class FarmingView{
+-farmingViewModel : FieldViewModel
+-pressedKeys : Set<String>
+--
++configEventHandler(Scene) : void
++configHead() : void
++configField() : void
++configBottomButton() : void
++configSideButton() : void
+}
+class HeadView{
++HeadView(HeadViewModel)
+}
+class BottomButtonView{
++BottomButtonView(BottomButtonViewModel)
+}
+class SideButtonView{
++SideButtonView(SideButtonViewModel)
+}
+class FieldView{
++FieldView(FieldViewModel)
+}
+class PlotView{
++PlotView(PlotViewModel)
+}
+FarmingView x--> "1" FieldView
+FarmingView x--> "1" HeadView
+FarmingView x--> "1" BottomButtonView
+FarmingView x--> "1" SideButtonView
+FieldView x--> "1* " PlotView
+}
+
+package view-model {
+class FarmingViewModel{
+-headViewModel : HeadViewModel
+-fieldViewModel : FieldViewModel
+-buttonViewModel : BottomButtonViewModel
+-game : Game
+-pressedKeys : Set<KeyValue>
+--
++move(KeyValue) : void
++addPlotElement() : void
+}
+
+class HeadViewModel{
+-dayProperty : IntegerProperty
+-scoreProperty : IntegerProperty
+--
++HeadViewModel(Game)
+}
+
+class BottomButtonViewModel{
+-gameStatusProperty : ObjectProperty<GameStatus>
+-careTaker : CareTaker
+--
++BottomButtonViewModel(Game, Runnable restoreButton)
++buttonActionStart() : void
++buttonActionSleep() : void
++buttonActionSave() : void
++buttonActionRestore() : void
+}
+
+class FieldViewModel{
++FieldViewModel(Game)
++newPlotViewModel(int,int) : PlotViewModel
+}
+
+class SideBottomButtonViewModel{
+-gameStatusProperty : ObjectProperty<GameStatus>
+--
++SideButtonViewModel(Game)
++buttonAction() : void
++unSelectedButtonProperties() : void
++restoreSelectedButtonProperties() : void
+}
+
+class PlotViewModel{
+-line : int
+-col : int
+-isFarmerOnPlot : BooleanProperty
+-value : SimpleObjectProperty
+--
++PlotViewModel(int,int,Game)
++teleport() : void
+}
+
+FarmingViewModel x--> "1"  FieldViewModel
+FarmingViewModel x--> "1 " HeadViewModel
+FarmingViewModel x--> "1" BottomButtonViewModel
+FarmingViewModel x--> "1" SideBottomButtonViewModel
+FieldViewModel  x--> "1* " PlotViewModel
+}
+
+package model {
+class Game{
+-dayProperty : IntegerProperty
+-scoreProperty : IntegerProperty
+--
++move(KeyValue)) : void
++teleport(int,int) : void
++plant(PlotElement,int) : void
++collect() : void
++fertilize() : void
++save() : GameMemento
++restore(GameMemento) : void
+}
+
+class Farmer{
+-line : IntegerProperty
+-col : IntegerProperty
+--
++move(KeyValue) : void
++teleport(int,int) : void
++save() : FarmerMemento
++restore(FarmerMemento) : void
+}
+
+class Field{
+-matrix : Array[Plot][Plot]
+-farmerPosLine : IntegerProperty
+-farmerPosCol : IntegerProperty
+--
++plant(PlotElement,int) : void
++collect() : void
++fertilize() : void
++save() : PlotMemento[][]
++restore(PlotMemento[][]) : void
+}
+
+enum GameStatus{
+DEPART
+START
+END
+PLANT_GRASS
+PLANT_CARROT
+PLANT_CABBAGE
+FERTILIZE
+COLLECT
+}
+
+class Plot{
+-plotElements : ObservableList<Vegetable>
+-isFarmerOnPlot : BooleanProperty
+-dayProperty : IntegerProperty
+-scoreProperty : IntegerProperty
+----
++reset() : void
++sleep() : void
++plant(PlotElement,int) : void
++collect() : void
++fertilize() : void
++setIsFarmerOnPlot(boolean) : void
++save() : PlotMemento
++restore(PlotMemento) : void
+}
+
+abstract class Vegetable{
+-nbDayWithGrass : int
+--
++fertilize() : void
++collect() : int
++grow() : void
++getCopy() : Vegetable
+}
+
+interface StateVegetable{
++grow() : void
++collect() : int
++fertilize() : void
++getState() : State
++getCopy() : StateVegetable
++setDay(int) : void
+}
+
+enum PlotElement{
+GRASS
+DIRT
+CARROT
+CABBAGE
+}
+
+note top of StateVegetable : More detail: StateClassDiagram.puml
+
+
+
+
+Game *-- "1 " Farmer
+Game *-- "1 " Field
+Game *-- "1"  GameStatus
+Plot "1 " -- "1* " Vegetable
+Field "1 " -- "1* " Plot
+Vegetable <|-- Carrot
+Vegetable <|-- Cabbage
+Vegetable *-- StateVegetable
+Vegetable *-- PlotElement
+}
+note "Details for Memento Design Pattern => see MementoClassDiagram.puml" as N1
+
+
+
+FarmingView x--> "1" FarmingViewModel
+HeadViewModel x--> "1 " Game
+FarmingViewModel x--> "1" Game
+FieldViewModel x--> "1 " Game
+PlotViewModel x--> "1 " Game
+SideBottomButtonViewModel x--> "1" Game
+BottomButtonViewModel x--> "1" Game
+App x--> "1 " FarmingView
+
+@enduml
